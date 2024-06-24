@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_app/components/custom_button.dart';
 import 'package:movie_app/components/movie_background.dart';
 import 'package:movie_app/model/movie.dart';
+import 'package:movie_app/screens/movie_details.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -21,7 +22,7 @@ class MainApp extends StatelessWidget {
         ),
       ],
       child: Consumer<Movies>(
-        builder: (context, authData, _) => MaterialApp(
+        builder: (context, movies, _) => MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Cinema',
           theme: ThemeData(brightness: Brightness.dark),
@@ -29,6 +30,12 @@ class MainApp extends StatelessWidget {
             //  '/movie-details': (ctx) => MovieDetailsScreen(),
             '/': (ctx) => const HomeScreen(),
             '/home': (ctx) => const HomeScreen(),
+            '/movie-details':(ctx) {
+              final movieId = ModalRoute.of(ctx)!.settings.arguments as String;
+              final movie = movies.trendingMovies.firstWhere((element) => element.id == movieId);
+              return MovieDetailsScreen(movie: movie);
+            }
+
           },
         ),
       ),

@@ -126,16 +126,26 @@ class MovieBackgroundWidget extends StatelessWidget {
               children: movies.map((movie) {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    width: 200,
-                    height: size.height * .4,
-                    clipBehavior: Clip.hardEdge,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.white, width: 0.2),
-                      image: DecorationImage(
-                        image: NetworkImage("https://image.tmdb.org/t/p/w500${movie.imageUrl}"),
-                        fit: BoxFit.cover,
+                  child: InkWell(
+                    onTap: () async {
+                      controller.stop();
+                      await Navigator.of(context).pushNamed('/movie-details', arguments: movie.id);
+                      controller.forward();
+                    },
+                    child: Container(
+                      width: 200,
+                      height: size.height * .4,
+                      clipBehavior: Clip.hardEdge,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.white, width: 0.2),
+                      ),
+                      child: Hero(
+                        tag: movie.id,
+                        child: Image.network(
+                          "https://image.tmdb.org/t/p/w500${movie.imageUrl}",
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
