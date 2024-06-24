@@ -2,13 +2,15 @@ import 'package:cache_systems/cache_systems.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/components/custom_button.dart';
 import 'package:movie_app/components/movie_background.dart';
+import 'package:movie_app/manager/database_manager.dart';
 import 'package:movie_app/model/movie.dart';
 import 'package:movie_app/screens/movie_details.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized;
   await CacheSystem().init(stalePeriod: const Duration(days: 7));
+  DatabaseManager().init();
   runApp(const MainApp());
 }
 

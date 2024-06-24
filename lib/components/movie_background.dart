@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:cache_systems/cache_systems.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/model/movie.dart';
 
@@ -16,10 +20,11 @@ class _MovieBackgroundState extends State<MovieBackground> with SingleTickerProv
   final ScrollController scrollController2 = ScrollController();
   final ScrollController scrollController3 = ScrollController();
   final ScrollController scrollController4 = ScrollController();
-  List<Movie> get rightMovies => widget.movies.take(15).toList();
-  List<Movie> get leftMovies => widget.movies.skip(15).take(15).toList();
-  List<Movie> get rightMovies2 => widget.movies.skip(30).take(15).toList();
-  List<Movie> get leftMovies2 => widget.movies.skip(45).toList();
+  int get length => widget.movies.length ~/ 4;
+  List<Movie> get rightMovies => widget.movies.take(length).toList();
+  List<Movie> get leftMovies => widget.movies.skip(length).take(length).toList();
+  List<Movie> get rightMovies2 => widget.movies.skip(length * 2).take(length).toList();
+  List<Movie> get leftMovies2 => widget.movies.skip(length * 3).take(length).toList();
 
   double top = -2000;
   double left = -500;
@@ -27,7 +32,6 @@ class _MovieBackgroundState extends State<MovieBackground> with SingleTickerProv
   @override
   void initState() {
     super.initState();
-
     _controller = AnimationController(vsync: this, duration: const Duration(seconds: 20));
     _controller.repeat();
     _controller.addListener(() {
@@ -43,6 +47,8 @@ class _MovieBackgroundState extends State<MovieBackground> with SingleTickerProv
         _controller.stop();
       }
     });
+
+    print("rightMovies: ${rightMovies.length} leftMovies: ${leftMovies.length}rightMovies2: ${rightMovies2.length} leftMovies2: ${leftMovies2.length} ");
   }
 
   @override
@@ -140,26 +146,62 @@ class MovieBackgroundWidget extends StatelessWidget {
                       controller.forward();
                     },
                     child: Container(
-                      width: 200,
-                      height: size.height * .4,
-                      clipBehavior: Clip.hardEdge,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.white, width: 0.2),
-                      ),
-                      child: Hero(
-                        tag: movie.id,
-                        child: Image.network(
-                          "https://image.tmdb.org/t/p/original${movie.imageUrl}",
-                          fit: BoxFit.cover,
+                        width: 200,
+                        height: size.height * .4,
+                        clipBehavior: Clip.hardEdge,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: Colors.white, width: 0.2),
                         ),
-                      ),
-                    ),
+                        child: MovieImage(movie: movie)),
                   ),
                 );
               }).toList(),
             );
           }),
     );
+  }
+}
+
+class MovieImage extends StatefulWidget {
+  final Movie movie;
+  const MovieImage({super.key, required this.movie});
+
+  @override
+  State<MovieImage> createState() => _MovieImageState();
+}
+
+class _MovieImageState extends State<MovieImage> {
+  ImageProvider? imageProvider;
+  Timer? timer;
+
+  void _loadImage() async {
+    final image = await CacheSystem().getFile(Uri.parse("https://image.tmdb.org/t/p/w500${widget.movie.imageUrl}"));
+    if (image == null) {
+      timer = Timer(const Duration(seconds: 3), () {
+        _loadImage();
+      });
+      return;
+    }
+    timer?.cancel();
+
+    setState(() {
+      imageProvider = FileImage(File(image.path));
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadImage();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (imageProvider == null) {
+      return const Center(child: SizedBox(width: 68, height: 68, child: CircularProgressIndicator()));
+    } else {
+      return Hero(tag: widget.movie.id, child: Image(image: imageProvider!, fit: BoxFit.cover));
+    }
   }
 }

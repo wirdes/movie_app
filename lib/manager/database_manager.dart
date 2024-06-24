@@ -3,7 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 String likedMovie = 'likedMovieBox';
 
 class DatabaseManager {
-  late Box likedMovieBox;
+  late Box _likedMovieBox;
 
   static final DatabaseManager _instance = DatabaseManager._();
   factory DatabaseManager() => _instance;
@@ -11,26 +11,34 @@ class DatabaseManager {
 
   Future<void> init() async {
     await Hive.initFlutter();
-    likedMovieBox = await Hive.openBox(likedMovie);
+    _likedMovieBox = await Hive.openBox(likedMovie);
   }
 
-  Future<void> addLikedMovie(String movieId) async {
-    await likedMovieBox.put(movieId, true);
+  Future<void> toggleLikeMovie(String id) async {
+    if (isLikedMovie(id)) {
+      await _unlikeMovie(id);
+    } else {
+      await _likeMovie(id);
+    }
   }
 
-  Future<void> removeLikedMovie(String movieId) async {
-    await likedMovieBox.delete(movieId);
+  Future<void> _likeMovie(String movieId) async {
+    await _likedMovieBox.put(movieId, true);
+  }
+
+  Future<void> _unlikeMovie(String movieId) async {
+    await _likedMovieBox.delete(movieId);
   }
 
   bool isLikedMovie(String movieId) {
-    return likedMovieBox.containsKey(movieId);
+    return _likedMovieBox.containsKey(movieId);
   }
 
   List<String> getLikedMovies() {
-    return likedMovieBox.keys.cast<String>().toList();
+    return _likedMovieBox.keys.cast<String>().toList();
   }
 
   Future<void> clearLikedMovies() async {
-    await likedMovieBox.clear();
+    await _likedMovieBox.clear();
   }
 }

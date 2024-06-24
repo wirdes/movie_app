@@ -22,6 +22,16 @@ class Movie with ChangeNotifier {
     };
   }
 
+  void setTitle(String title) {
+    title = title;
+    notifyListeners();
+  }
+
+  void setDescription(String description) {
+    description = description;
+    notifyListeners();
+  }
+
   Movie.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         title = json['title'],
@@ -72,7 +82,7 @@ class Movies with ChangeNotifier {
         if (loadedTrendingMovies.where((element) => element.id == movieData['id'].toString()).isEmpty) {
           loadedTrendingMovies.add(Movie(
             id: movieData['id'].toString(),
-            title: movieData['original_title'] ?? 'Loading...',
+            title: movieData['original_title'] ?? movieData['original_name'] ?? 'Loading...',
             description: movieData['overview'] ?? 'Loading...',
             releaseDate: movieData['release_date'] ?? 'Loading...',
             imageUrl: movieData['poster_path'] ?? 'Loading...',
@@ -83,7 +93,7 @@ class Movies with ChangeNotifier {
         if (loadedDiscoverMovies.where((element) => element.id == movieData['id'].toString()).isEmpty) {
           loadedDiscoverMovies.add(Movie(
             id: movieData['id'].toString(),
-            title: movieData['original_title'] ?? 'Loading...',
+            title: movieData['original_title'] ?? movieData['original_name'] ?? 'Loading...',
             description: movieData['overview'] ?? 'Loading...',
             releaseDate: movieData['release_date'] ?? 'Loading...',
             imageUrl: movieData['poster_path'] ?? 'Loading...',
@@ -94,7 +104,7 @@ class Movies with ChangeNotifier {
         if (loadedtopRatedMovies.where((element) => element.id == movieData['id'].toString()).isEmpty) {
           loadedtopRatedMovies.add(Movie(
             id: movieData['id'].toString(),
-            title: movieData['original_title'] ?? 'Loading...',
+            title: movieData['original_title'] ?? movieData['original_name'] ?? 'Loading...',
             description: movieData['overview'] ?? 'Loading...',
             releaseDate: movieData['release_date'] ?? 'Loading...',
             imageUrl: movieData['poster_path'] ?? 'Loading...',
@@ -105,7 +115,7 @@ class Movies with ChangeNotifier {
         if (loadedTvPopular.where((element) => element.id == movieData['id'].toString()).isEmpty) {
           loadedTvPopular.add(Movie(
             id: movieData['id'].toString(),
-            title: movieData['original_title'] ?? 'Loading...',
+            title: movieData['original_title'] ?? movieData['original_name'] ?? 'Loading...',
             description: movieData['overview'] ?? 'Loading...',
             releaseDate: movieData['release_date'] ?? 'Loading...',
             imageUrl: movieData['poster_path'] ?? 'Loading...',
@@ -133,6 +143,7 @@ class Movies with ChangeNotifier {
           _movies.add(element);
         }
       }
+
       notifyListeners();
     } catch (error) {
       rethrow;
