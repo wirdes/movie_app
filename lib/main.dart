@@ -1,3 +1,4 @@
+import 'package:cache_systems/cache_systems.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/components/custom_button.dart';
 import 'package:movie_app/components/movie_background.dart';
@@ -7,6 +8,7 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await CacheSystem().init(stalePeriod: const Duration(days: 7));
   runApp(const MainApp());
 }
 

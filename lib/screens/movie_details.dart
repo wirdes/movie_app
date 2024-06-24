@@ -18,18 +18,17 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final movie = widget.movie;
+    final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Movie Details'),
-      ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
           children: [
             const Text('Movie Details Screen'),
             Hero(
               tag: movie.id,
               child: Image.network(
-                "https://image.tmdb.org/t/p/w500${movie.imageUrl}",
+                height: size.height,
+                "https://image.tmdb.org/t/p/original${movie.imageUrl}",
                 fit: BoxFit.cover,
               ),
             ),

@@ -16,10 +16,10 @@ class _MovieBackgroundState extends State<MovieBackground> with SingleTickerProv
   final ScrollController scrollController2 = ScrollController();
   final ScrollController scrollController3 = ScrollController();
   final ScrollController scrollController4 = ScrollController();
-  List<Movie> get rightMovies => widget.movies.take(widget.movies.length ~/ 4).toList();
-  List<Movie> get leftMovies => widget.movies.skip(widget.movies.length ~/ 4).take(widget.movies.length ~/ 4).toList();
-  List<Movie> get rightMovies2 => widget.movies.skip(widget.movies.length ~/ 2).take(widget.movies.length ~/ 4).toList();
-  List<Movie> get leftMovies2 => widget.movies.skip(widget.movies.length ~/ 2).skip(widget.movies.length ~/ 4).toList();
+  List<Movie> get rightMovies => widget.movies.take(15).toList();
+  List<Movie> get leftMovies => widget.movies.skip(15).take(15).toList();
+  List<Movie> get rightMovies2 => widget.movies.skip(30).take(15).toList();
+  List<Movie> get leftMovies2 => widget.movies.skip(45).toList();
 
   double top = -2000;
   double left = -500;
@@ -27,7 +27,7 @@ class _MovieBackgroundState extends State<MovieBackground> with SingleTickerProv
   @override
   void initState() {
     super.initState();
-    widget.movies.shuffle();
+
     _controller = AnimationController(vsync: this, duration: const Duration(seconds: 20));
     _controller.repeat();
     _controller.addListener(() {
@@ -65,8 +65,7 @@ class _MovieBackgroundState extends State<MovieBackground> with SingleTickerProv
         _controller.stop();
         var topPos = top + (details.delta.dy * 1.5);
         var leftPos = left + (details.delta.dx * 1.5);
-
-        if (topPos > 150 || leftPos > 150 || leftPos < -1100 || topPos < -4000) {
+        if (topPos > 0 || leftPos > 36 || leftPos < -925 || topPos < -3700) {
           return;
         }
 
@@ -92,8 +91,8 @@ class _MovieBackgroundState extends State<MovieBackground> with SingleTickerProv
                 children: [
                   MovieBackgroundWidget(size: size, controller: _controller, scrollController: scrollController, movies: rightMovies),
                   MovieBackgroundWidget(size: size, controller: _controller, scrollController: scrollController2, movies: leftMovies, reverse: true),
-                  MovieBackgroundWidget(size: size, controller: _controller, scrollController: scrollController3, movies: rightMovies),
-                  MovieBackgroundWidget(size: size, controller: _controller, scrollController: scrollController4, movies: leftMovies, reverse: true),
+                  MovieBackgroundWidget(size: size, controller: _controller, scrollController: scrollController3, movies: rightMovies2),
+                  MovieBackgroundWidget(size: size, controller: _controller, scrollController: scrollController4, movies: leftMovies2, reverse: true),
                 ],
               ),
             ),
@@ -151,7 +150,7 @@ class MovieBackgroundWidget extends StatelessWidget {
                       child: Hero(
                         tag: movie.id,
                         child: Image.network(
-                          "https://image.tmdb.org/t/p/w500${movie.imageUrl}",
+                          "https://image.tmdb.org/t/p/original${movie.imageUrl}",
                           fit: BoxFit.cover,
                         ),
                       ),

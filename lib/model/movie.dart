@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:movie_app/manager/tmdb_managaner.dart';
+import 'package:movie_app/manager/tmdb_manager.dart';
 
 class Movie with ChangeNotifier {
   final String id;
@@ -31,6 +31,11 @@ class Movie with ChangeNotifier {
         isFavorite = json['isFavorite'];
 
   bool fav(Movie mov) => mov.isFavorite;
+
+  @override
+  String toString() {
+    return 'Movie{id: $id, title: $title, imageUrl: $imageUrl, description: $description, releaseDate: $releaseDate, isFavorite: $isFavorite}';
+  }
 }
 
 class Movies with ChangeNotifier {
@@ -64,50 +69,70 @@ class Movies with ChangeNotifier {
       final tvPopularResults = popular['results'] as List<dynamic>;
 
       for (var movieData in trendingReults) {
-        loadedTrendingMovies.add(Movie(
-          id: movieData['id'].toString(),
-          title: movieData['original_title'] ?? 'Loading...',
-          description: movieData['overview'] ?? 'Loading...',
-          releaseDate: movieData['release_date'] ?? '',
-          imageUrl: movieData['poster_path'] ?? '',
-        ));
+        if (loadedTrendingMovies.where((element) => element.id == movieData['id'].toString()).isEmpty) {
+          loadedTrendingMovies.add(Movie(
+            id: movieData['id'].toString(),
+            title: movieData['original_title'] ?? 'Loading...',
+            description: movieData['overview'] ?? 'Loading...',
+            releaseDate: movieData['release_date'] ?? 'Loading...',
+            imageUrl: movieData['poster_path'] ?? 'Loading...',
+          ));
+        }
       }
       for (var movieData in discoverResults) {
-        loadedDiscoverMovies.add(Movie(
-          id: movieData['id'].toString(),
-          title: movieData['original_title'] ?? 'Loading...',
-          description: movieData['overview'] ?? 'Loading...',
-          releaseDate: movieData['release_date'],
-          imageUrl: movieData['poster_path'],
-        ));
+        if (loadedDiscoverMovies.where((element) => element.id == movieData['id'].toString()).isEmpty) {
+          loadedDiscoverMovies.add(Movie(
+            id: movieData['id'].toString(),
+            title: movieData['original_title'] ?? 'Loading...',
+            description: movieData['overview'] ?? 'Loading...',
+            releaseDate: movieData['release_date'] ?? 'Loading...',
+            imageUrl: movieData['poster_path'] ?? 'Loading...',
+          ));
+        }
       }
       for (var movieData in topRatedResults) {
-        loadedtopRatedMovies.add(Movie(
-          id: movieData['id'].toString(),
-          title: movieData['original_name'] ?? 'Loading...',
-          description: movieData['overview'] ?? 'Loading...',
-          releaseDate: movieData['first_air_date'] ?? '',
-          imageUrl: movieData['poster_path'],
-        ));
+        if (loadedtopRatedMovies.where((element) => element.id == movieData['id'].toString()).isEmpty) {
+          loadedtopRatedMovies.add(Movie(
+            id: movieData['id'].toString(),
+            title: movieData['original_title'] ?? 'Loading...',
+            description: movieData['overview'] ?? 'Loading...',
+            releaseDate: movieData['release_date'] ?? 'Loading...',
+            imageUrl: movieData['poster_path'] ?? 'Loading...',
+          ));
+        }
       }
       for (var movieData in tvPopularResults) {
-        loadedTvPopular.add(Movie(
-          id: movieData['id'].toString(),
-          title: movieData['original_name'] ?? 'Loading...',
-          description: movieData['overview'] ?? 'Loading...',
-          releaseDate: movieData['first_air_date'] ?? '',
-          imageUrl: movieData['poster_path'],
-        ));
+        if (loadedTvPopular.where((element) => element.id == movieData['id'].toString()).isEmpty) {
+          loadedTvPopular.add(Movie(
+            id: movieData['id'].toString(),
+            title: movieData['original_title'] ?? 'Loading...',
+            description: movieData['overview'] ?? 'Loading...',
+            releaseDate: movieData['release_date'] ?? 'Loading...',
+            imageUrl: movieData['poster_path'] ?? 'Loading...',
+          ));
+        }
       }
       _trendingMovies = loadedTrendingMovies;
       _discoverMovies = loadedDiscoverMovies;
       _topRatedMovies = loadedtopRatedMovies;
       _tvPopular = loadedTvPopular;
-      _movies = (_trendingMovies + _discoverMovies + _topRatedMovies + _tvPopular).toSet().toList();
-      print(_movies.length);
-      _movies.forEach((movie) {
-        print(movie.id);
-      });
+      _movies = [];
+      _movies.addAll(_trendingMovies);
+      for (var element in _discoverMovies) {
+        if (_movies.where((movie) => movie.id == element.id).isEmpty) {
+          _movies.add(element);
+        }
+      }
+      for (var element in _topRatedMovies) {
+        if (_movies.where((movie) => movie.id == element.id).isEmpty) {
+          _movies.add(element);
+        }
+      }
+      for (var element in _tvPopular) {
+        if (_movies.where((movie) => movie.id == element.id).isEmpty) {
+          _movies.add(element);
+        }
+      }
       notifyListeners();
     } catch (error) {
       rethrow;
