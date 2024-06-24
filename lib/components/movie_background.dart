@@ -16,8 +16,11 @@ class _MovieBackgroundState extends State<MovieBackground> with SingleTickerProv
   final ScrollController scrollController2 = ScrollController();
   final ScrollController scrollController3 = ScrollController();
   final ScrollController scrollController4 = ScrollController();
-  List<Movie> get rightMovies => widget.movies;
-  List<Movie> get leftMovies => widget.movies.reversed.toList();
+  List<Movie> get rightMovies => widget.movies.take(widget.movies.length ~/ 4).toList();
+  List<Movie> get leftMovies => widget.movies.skip(widget.movies.length ~/ 4).take(widget.movies.length ~/ 4).toList();
+  List<Movie> get rightMovies2 => widget.movies.skip(widget.movies.length ~/ 2).take(widget.movies.length ~/ 4).toList();
+  List<Movie> get leftMovies2 => widget.movies.skip(widget.movies.length ~/ 2).skip(widget.movies.length ~/ 4).toList();
+
   double top = -2000;
   double left = -500;
   double shake(double animation) => 5 * animation * (1 - animation);

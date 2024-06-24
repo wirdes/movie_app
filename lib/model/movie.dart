@@ -43,6 +43,7 @@ class Movies with ChangeNotifier {
   List<Movie> get discoverMovies => _discoverMovies;
   List<Movie> get topRatedMovies => _topRatedMovies;
   List<Movie> get tvPopular => _tvPopular;
+  List<Movie> get movies => _movies;
 
   Movie findSingleById(String id) => _movies.firstWhere((movie) => movie.id == id);
 
@@ -61,6 +62,7 @@ class Movies with ChangeNotifier {
       final discoverResults = discover['results'] as List<dynamic>;
       final topRatedResults = topRated['results'] as List<dynamic>;
       final tvPopularResults = popular['results'] as List<dynamic>;
+
       for (var movieData in trendingReults) {
         loadedTrendingMovies.add(Movie(
           id: movieData['id'].toString(),

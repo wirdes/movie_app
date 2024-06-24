@@ -30,12 +30,11 @@ class MainApp extends StatelessWidget {
             //  '/movie-details': (ctx) => MovieDetailsScreen(),
             '/': (ctx) => const HomeScreen(),
             '/home': (ctx) => const HomeScreen(),
-            '/movie-details':(ctx) {
+            '/movie-details': (ctx) {
               final movieId = ModalRoute.of(ctx)!.settings.arguments as String;
               final movie = movies.trendingMovies.firstWhere((element) => element.id == movieId);
               return MovieDetailsScreen(movie: movie);
             }
-
           },
         ),
       ),
@@ -74,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       size: size,
                       child: Stack(
                         children: [
-                          MovieBackground(movies: movieData.trendingMovies),
+                          MovieBackground(movies: movieData.movies),
                           const CustomButton(),
                         ],
                       )),
