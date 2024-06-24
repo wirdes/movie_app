@@ -65,6 +65,11 @@ class _MovieBackgroundState extends State<MovieBackground> with SingleTickerProv
         _controller.stop();
         var topPos = top + (details.delta.dy * 1.5);
         var leftPos = left + (details.delta.dx * 1.5);
+
+        if (topPos > 150 || leftPos > 150 || leftPos < -1100 || topPos < -4000) {
+          return;
+        }
+
         setState(() {
           top = topPos;
           left = leftPos;

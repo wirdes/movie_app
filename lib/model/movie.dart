@@ -103,7 +103,11 @@ class Movies with ChangeNotifier {
       _discoverMovies = loadedDiscoverMovies;
       _topRatedMovies = loadedtopRatedMovies;
       _tvPopular = loadedTvPopular;
-      _movies = _trendingMovies + _discoverMovies + _topRatedMovies + _tvPopular;
+      _movies = (_trendingMovies + _discoverMovies + _topRatedMovies + _tvPopular).toSet().toList();
+      print(_movies.length);
+      _movies.forEach((movie) {
+        print(movie.id);
+      });
       notifyListeners();
     } catch (error) {
       rethrow;

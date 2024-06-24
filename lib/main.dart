@@ -32,7 +32,7 @@ class MainApp extends StatelessWidget {
             '/home': (ctx) => const HomeScreen(),
             '/movie-details': (ctx) {
               final movieId = ModalRoute.of(ctx)!.settings.arguments as String;
-              final movie = movies.trendingMovies.firstWhere((element) => element.id == movieId);
+              final movie = movies.movies.firstWhere((element) => element.id == movieId);
               return MovieDetailsScreen(movie: movie);
             }
           },
