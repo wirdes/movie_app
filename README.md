@@ -17,7 +17,10 @@ I tried to create an animated movie app using Flutter and the TMDb API.[TMDb API
 
 ## Screenshots and Video
 
-![Video](https://github.com/wirdes/movie_app/video.mp4)
+https://github.com/wirdes/movie_app/assets/45904810/7135baca-e255-42e5-a972-406833db070f
+
+
+
 
 ## Installation
 
